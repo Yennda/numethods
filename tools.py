@@ -1,5 +1,6 @@
 import math as m
 import numpy as np
+import copy
 
 
 def integrate(f, a, b, n):
@@ -21,6 +22,12 @@ def integrate2(f, a, b, n):
     return h * s
 
 
+def is_strong_reg(H):
+    for i in range(1, len(H)):
+        nH = np.matrix(H)
+    return not m.isclose(np.linalg.det(nH[:i, :i]), 0, rel_tol=0.001)
+
+
 def one(n):
     o = []
     for i in range(n):
@@ -38,7 +45,20 @@ def zero(n):
     return o
 
 
-def ludec(A):
+def dot(a, b):
+    if len(a[0]) != len(b):
+        raise Exception('not suitable matrix dimensions')
+    C = []
+    for i in range(len(a)):
+        r = []
+        for j in range(len(b)):
+            r.append(sum([a[i][k] * b[k][j] for k in range(len(a[0]))]))
+        C.append(r)
+
+    return C
+
+
+def lu(A):
     n = len(A)
     L = one(n)
     U = zero(n)
@@ -60,3 +80,13 @@ def ludec(A):
             U[j][i] = matrixu(j, i, A)
     return L, U
 
+
+def eigenvalues(A, n):
+    L, U = lu(A)
+
+    for i in range(n):
+        if i == n // 10 * 9:
+            B = A
+        L, U = lu(A)
+        A = dot(U, L)
+    return [A[i][i] for i in range(len(A))], [B[i][i] for i in range(len(B))]
