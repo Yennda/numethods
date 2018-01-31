@@ -18,37 +18,37 @@ def compute(n):
     else:
         t.print_mat(H)
 
-    print('H is strongly regular: {}'.format(t.is_strong_reg(H)))
+    # print('H is strongly regular: {}'.format(t.is_strong_reg(H)))
 
     res = t.eigenvalues(H, 500)
     print(
-        'Eigenvalues:\n {}\nEigenvalues at 0.9n:\n {}'.format(res[0], res[1]))
+        'Eigenvalues:\n {}'.format(res))
 
     print('\nT {:.3f} s'.format(time.time() - lt))
 
 
 def err_integral(n, dN):
-    eigen = t.eigenvalues(dvr.hamilton_matrix(n), 500)[0][0:3]
+    eigen = t.eigenvalues(dvr.hamilton_matrix(n), 500)[0:3]
     dvr.N += dN
 
-    diff = t.minus(eigen, t.eigenvalues(dvr.hamilton_matrix(n), 500)[0][0:3])
+    diff = t.minus(eigen, t.eigenvalues(dvr.hamilton_matrix(n), 500)[0:3])
     return [d / dN for d in diff]
 
 
 def err_dimension(n, dn):
-    eigen = t.eigenvalues(dvr.hamilton_matrix(n), 500)[0][0:3]
+    eigen = t.eigenvalues(dvr.hamilton_matrix(n), 500)[0:3]
 
     diff = t.minus(eigen,
-                   t.eigenvalues(dvr.hamilton_matrix(n + dn), 500)[0][0:3])
+                   t.eigenvalues(dvr.hamilton_matrix(n + dn), 500)[0:3])
     return [d / dn for d in diff]
 
 
 def err_interval(n, a=0, b=0):
-    eigen = t.eigenvalues(dvr.hamilton_matrix(n), 500)[0][0:3]
+    eigen = t.eigenvalues(dvr.hamilton_matrix(n), 500)[0:3]
     dvr.a += a
     dvr.b += b
 
-    diff = t.minus(eigen, t.eigenvalues(dvr.hamilton_matrix(n), 500)[0][0:3])
+    diff = t.minus(eigen, t.eigenvalues(dvr.hamilton_matrix(n), 500)[0:3])
     return [d / (b - a) for d in diff]
 
 
@@ -63,6 +63,11 @@ dt = time.time()
 #
 # print(l)
 
-compute(20)
+dvr.N = 500
+print('300:')
+compute(300)
+
+print('200:')
+compute(200)
 
 print('\nTotal time: {:.3f} s'.format(time.time() - dt))

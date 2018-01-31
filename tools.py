@@ -87,22 +87,25 @@ def minus(a, b):
     return [a[i] - b[i] for i in range(len(a))]
 
 
+def is_small(A):
+    for a in A:
+        if m.fabs(a) > 1:
+            return False
+    else:
+        return True
+
+
 def eigenvalues(A, n):
     L, U = lu(A)
-
     for i in range(n):
-        if i == n // 10 * 9:
-            B = A
-        L, U = lu(A)
+        lA = A
+        L, U = lu(lA)
         A = dot(U, L)
-    return [A[i][i] for i in range(len(A))], [B[i][i] for i in range(len(B))]
+        if is_small([A[i][i] - lA[i][i] for i in range(len(A))]):
+            return [A[i][i] for i in range(len(A))]
+    return [A[i][i] for i in range(len(A))]
 
 
-def print_mat(self, M):
+def print_mat(M):
     for r in M:
         print(['{:02.2f}'.format(i) for i in r])
-
-# def list_to_csv(data, path):
-#     file=open(path, w)
-#     for r in data:
-#         file.write()
