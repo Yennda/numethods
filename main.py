@@ -20,8 +20,12 @@ def phi(k, x):
     return (2 / (b - a)) ** 0.5 * m.sin(k * m.pi * (x - a) / (b - a))
 
 
+def morse(x):
+    return m.exp(-2 * x) - 2 * m.exp(-x)
+
+
 def potential_matrix_fn(k, l, x):
-    return phi(k, x) * phi(l, x) * (m.exp(-2 * x) - 2 * m.exp(-x))
+    return phi(k, x) * phi(l, x) * morse(x)
 
 
 def potential_matrix(k, l):
@@ -31,15 +35,15 @@ def potential_matrix(k, l):
 def kinetic_matrix(k, l):
     if k != l:
         return 0
-    return GAMMA ** (-2) * (k * m.pi / (b - a)) ** 2
+    return (1 / GAMMA * (k * m.pi / (b - a))) ** 2
 
 
-def matrix_hamilton(r, c):
+def hamilton_matrix(r):
     matrix = []
     for i in range(1, r):
         row = []
-        for j in range(1, c):
-            row.append(kinetic_matrix(i, j) + potential_matrix(i, j))
+        for j in range(1, r):
+            row.append(potential_matrix(i, j) + kinetic_matrix(i, j))
         matrix.append(row)
     return matrix
 
@@ -49,20 +53,28 @@ def print_mat(M):
         print(['{:02.2f}'.format(i) for i in r])
 
 
+def compute(n):
+    lt = time.time()
+
+    H = hamilton_matrix(n)
+    print('\nT {:.3f} s'.format(time.time() - lt))
+
+    print('Matrix of hamiltonian H:')
+    if n > 10:
+        print('too large')
+    else:
+        print_mat(H)
+
+    print('H is strongly regular: {}'.format(t.is_strong_reg(H)))
+
+    res = t.eigenvalues(H, 500)
+    print(
+        'Eigenvalues:\n {}\nEigenvalues at 0.9n:\n {}'.format(res[0], res[1]))
+
+    print('\nT {:.3f} s'.format(time.time() - lt))
+
+
 dt = time.time()
-
-H = matrix_hamilton(20, 20)
-
-print('Matrix of hamiltonian H:')
-print_mat(H)
-
-print('H is strongly regular: {}'.format(t.is_strong_reg(H)))
-
-lt = time.time()
-
-res = t.eigenvalues(H, 500)
-print('Eigenvalues:\n {}\nEigenvalues at 0.9n:\n {}'.format(res[0], res[1]))
-
-print('\nTime for eigenvalues: {:.3f} s'.format(time.time() - lt))
+# compute(50)
 
 print('\nTotal time: {:.3f} s'.format(time.time() - dt))
