@@ -81,6 +81,12 @@ def lu(A):
     return L, U
 
 
+def minus(a, b):
+    if len(a) != len(b):
+        raise Exception('different lengths of arrays')
+    return [a[i] - b[i] for i in range(len(a))]
+
+
 def eigenvalues(A, n):
     L, U = lu(A)
 
@@ -90,3 +96,13 @@ def eigenvalues(A, n):
         L, U = lu(A)
         A = dot(U, L)
     return [A[i][i] for i in range(len(A))], [B[i][i] for i in range(len(B))]
+
+
+def print_mat(self, M):
+    for r in M:
+        print(['{:02.2f}'.format(i) for i in r])
+
+# def list_to_csv(data, path):
+#     file=open(path, w)
+#     for r in data:
+#         file.write()
