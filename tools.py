@@ -89,18 +89,26 @@ def minus(a, b):
 
 def is_small(A):
     for a in A:
-        if m.fabs(a) > 1:
+        if m.fabs(a) > 1e-10:
             return False
     else:
         return True
 
 
 def mmax(A):
+    B = copy.copy(A)
     lA = []
-    for r in A:
-        lA.extend(r)
+    n = len(B)
+
+    for i in range(n):
+        lA.extend(B[i])
+        lA.remove(B[i][i])
     index = lA.index(max(lA))
-    return index // len(A), index % len(A)
+    i = index // (n - 1)
+    j = index % (n - 1)
+    if j >= i:
+        j += 1
+    return i, j
 
 
 def S_matrix(n, p, q, a):
@@ -136,10 +144,15 @@ def eigenJacobi(A, n):
     for i in range(n):
         lA = A
         p, q = mmax(A)
-        a = 0.5 * m.atan(2 * A[p][q] / (A[q][q] - A[p][p]))
+        if (A[q][q] - A[p][p]) == 0:
+            a = m.pi / 2
+        else:
+            a = 0.5 * m.atan(2 * A[p][q] / (A[q][q] - A[p][p]))
         S = S_matrix(d, p, q, a)
         A = dot(trans(S), dot(lA, S))
+
         if is_small([A[i][i] - lA[i][i] for i in range(len(A))]):
+            # print(i)
             return [A[i][i] for i in range(len(A))]
     return [A[i][i] for i in range(len(A))]
 

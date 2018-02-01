@@ -69,11 +69,18 @@ rt = time.time()
 
 dvr.N = 500
 
-H = dvr.hamilton_matrix(20)
-print(t.eigenLU(H, 500)[0:3])
+# H = dvr.hamilton_matrix(10)
+# t.print_mat(H)
+#
+# print(t.eigenLU(H, 500)[0:3])
+#
+# print(t.eigenJacobi(H, 500))
 
-print(t.eigenJacobi(H, 500)[0:3])
+A = [[-1, 1, 1], [1, 1, -1], [1, -1, 1]]
 
+print(t.eigenLU(A, 500))
+
+print(t.eigenJacobi(A, 500))
 # lis = []
 # times = []
 # for i in [100, 110, 130]:
