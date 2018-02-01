@@ -95,12 +95,50 @@ def is_small(A):
         return True
 
 
-def eigenvalues(A, n):
+def mmax(A):
+    lA = []
+    for r in A:
+        lA.extend(r)
+    index = lA.index(max(lA))
+    return index // len(A), index % len(A)
+
+
+def S_matrix(n, p, q, a):
+    S = one(n)
+    S[p][p] = m.cos(a)
+    S[q][q] = m.cos(a)
+    S[p][q] = m.sin(a)
+    S[q][p] = -m.sin(a)
+    return S
+
+
+def trans(A):
+    AT = []
+    for i in range(len(A)):
+        r = [A[j][i] for j in range(len(A))]
+        AT.append(r)
+    return AT
+
+
+def eigenLU(A, n):
     L, U = lu(A)
     for i in range(n):
         lA = A
         L, U = lu(lA)
         A = dot(U, L)
+        if is_small([A[i][i] - lA[i][i] for i in range(len(A))]):
+            return [A[i][i] for i in range(len(A))]
+    return [A[i][i] for i in range(len(A))]
+
+
+def eigenJacobi(A, n):
+    d = len(A)
+    for i in range(n):
+        lA = A
+        p, q = mmax(A)
+        a = 0.5 * m.atan(2 * A[p][q] / (A[q][q] - A[p][p]))
+        S = S_matrix(d, p, q, a)
+        A = dot(trans(S), dot(lA, S))
         if is_small([A[i][i] - lA[i][i] for i in range(len(A))]):
             return [A[i][i] for i in range(len(A))]
     return [A[i][i] for i in range(len(A))]
