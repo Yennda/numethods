@@ -4,22 +4,28 @@ import copy
 
 
 def integrate(f, a, b, n):
+    h = (b - a)
+    Io = (f(a) + f(b)) / 2 * h
+
+    h /= 2
+    In = f(a + h)
+    I = Io / 2 + In * h
+    k = 1
+
+    while k <= n and not (m.fabs(I - Io) < 1e-6 and k > 4):
+        Io = I
+        h /= 2
+        In = sum([f(a + h + i * 2 * h) for i in range(0, 2 ** k)])
+        I = Io / 2 + In * h
+        k += 1
+    return I
+
+
+def integrate_old(f, a, b, n):
     if n % 2 != 0:
         raise Exception('n must be even')
     h = (b - a) / n
     return h * sum([f(a + i * h) for i in range(1, n)]) + h * (f(a) + f(b)) / 2
-
-
-def integrate2(f, a, b, n):
-    if n % 2 != 0:
-        raise Exception('n must be even')
-    h = (b - a) / n
-
-    s = (f(a) + f(b)) / 2
-    for i in range(1, n):
-        s += f(a + i * h)
-
-    return h * s
 
 
 def is_strong_reg(H):
@@ -95,7 +101,7 @@ def is_small(A):
         return True
 
 
-def mmax(A):
+def matrix_max(A):
     B = copy.copy(A)
     lA = []
     n = len(B)
@@ -103,6 +109,7 @@ def mmax(A):
     for i in range(n):
         lA.extend(B[i])
         lA.remove(B[i][i])
+    lA = [m.fabs(l) for l in lA]
     index = lA.index(max(lA))
     i = index // (n - 1)
     j = index % (n - 1)
@@ -113,11 +120,18 @@ def mmax(A):
 
 def S_matrix(n, p, q, a):
     S = one(n)
+    St = one(n)
+
     S[p][p] = m.cos(a)
     S[q][q] = m.cos(a)
     S[p][q] = m.sin(a)
     S[q][p] = -m.sin(a)
-    return S
+
+    St[p][p] = m.cos(a)
+    St[q][q] = m.cos(a)
+    St[p][q] = -m.sin(a)
+    St[q][p] = m.sin(a)
+    return S, St
 
 
 def trans(A):
@@ -129,12 +143,12 @@ def trans(A):
 
 
 def eigenLU(A, n):
-    L, U = lu(A)
     for i in range(n):
         lA = A
         L, U = lu(lA)
         A = dot(U, L)
-        if is_small([A[i][i] - lA[i][i] for i in range(len(A))]):
+
+        if m.fabs(A[3][3] - lA[3][3]) < 1e-10:
             return [A[i][i] for i in range(len(A))]
     return [A[i][i] for i in range(len(A))]
 
@@ -142,21 +156,25 @@ def eigenLU(A, n):
 def eigenJacobi(A, n):
     d = len(A)
     for i in range(n):
+        if i == n // 10 * 9:
+            B = A
         lA = A
-        p, q = mmax(A)
+        p, q = matrix_max(A)
         if (A[q][q] - A[p][p]) == 0:
             a = m.pi / 2
         else:
             a = 0.5 * m.atan(2 * A[p][q] / (A[q][q] - A[p][p]))
         S = S_matrix(d, p, q, a)
-        A = dot(trans(S), dot(lA, S))
+        A = dot(S[1], dot(lA, S[0]))
 
         if is_small([A[i][i] - lA[i][i] for i in range(len(A))]):
-            # print(i)
+            print(i)
             return [A[i][i] for i in range(len(A))]
+    # print(sorted(B, reverse=True))
+
     return [A[i][i] for i in range(len(A))]
 
 
 def print_mat(M):
     for r in M:
-        print(['{:02.2f}'.format(i) for i in r])
+        print(['{:02.4f}'.format(i) for i in r])

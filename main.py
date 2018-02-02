@@ -2,7 +2,7 @@ import math as m
 import tools as t
 import time
 from script import DVR
-
+import numpy as np
 dvr = DVR(a=-3, b=5, N=1000)
 
 
@@ -56,7 +56,6 @@ def err_interval(n, a=0, b=0):
 
 
 dt = time.time()
-rt = time.time()
 
 # l = []
 # for i in range(1, 10):
@@ -68,30 +67,32 @@ rt = time.time()
 # print(l)
 
 dvr.N = 500
+rt = time.time()
+H = dvr.hamilton_matrix(50)
 
-# H = dvr.hamilton_matrix(10)
-# t.print_mat(H)
+# rt = time.time()
+# print(sorted(t.eigenLU(H, 500), reverse=True))
+# print(time.time() - rt)
 #
-# print(t.eigenLU(H, 500)[0:3])
+# # rt = time.time()
+# # print(sorted(t.eigenJacobi(H, 500), reverse=True))
+# # print(time.time() - rt)
 #
-# print(t.eigenJacobi(H, 500))
+# rt = time.time()
+# print(np.linalg.eig(H)[0])
+# print(time.time() - rt)
 
-A = [[-1, 1, 1], [1, 1, -1], [1, -1, 1]]
+lis = []
+times = []
+for i in [50+i*5 for i in range(8)]:
+    lis.append(compute_simple(i))
+    print('{}: {:.3f} s'.format(i, time.time() - rt))
+    times.append(time.time() - rt)
+    rt = time.time()
 
-print(t.eigenLU(A, 500))
-
-print(t.eigenJacobi(A, 500))
-# lis = []
-# times = []
-# for i in [100, 110, 130]:
-#     lis.append(compute_simple(i))
-#     print('{}: {:.3f} s'.format(i, time.time() - rt))
-#     times.append(time.time() - rt)
-#     rt = time.time()
-#
-# print([lis[i][0] for i in range(len(lis))])
-# print([lis[i][1] for i in range(len(lis))])
-# print([lis[i][2] for i in range(len(lis))])
-# print(times)
+print([lis[i][0] for i in range(len(lis))])
+print([lis[i][1] for i in range(len(lis))])
+print([lis[i][2] for i in range(len(lis))])
+print(times)
 
 print('\nTotal time: {:.3f} s'.format(time.time() - dt))

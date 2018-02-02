@@ -1,6 +1,7 @@
 import math as m
 import tools as t
 import time
+import scipy.integrate as it
 
 # a = -3
 # b = 5
@@ -33,8 +34,10 @@ class DVR():
         return self.phi(k, x) * self.phi(l, x) * self.morse(x)
 
     def potential_matrix(self, k, l):
-        return t.integrate(lambda x: self.potential_matrix_fn(k, l, x), self.a,
+        return t.integrate_old(lambda x: self.potential_matrix_fn(k, l, x), self.a,
                            self.b, self.N)
+        # return it.quad(lambda x: self.potential_matrix_fn(k, l, x), self.a,
+        #                self.b)[0]
 
     def kinetic_matrix(self, k, l):
         if k != l:
@@ -50,4 +53,3 @@ class DVR():
                     self.potential_matrix(i, j) + self.kinetic_matrix(i, j))
             matrix.append(row)
         return matrix
-
