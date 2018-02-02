@@ -84,7 +84,7 @@ H = dvr.hamilton_matrix(50)
 
 lis = []
 times = []
-for i in [300, 350]:
+for i in [40+i for i in range(0, 60, 2)]:
     lis.append(compute_simple(i))
     print('{}: {:.3f} s'.format(i, time.time() - rt))
     times.append(time.time() - rt)
