@@ -34,10 +34,10 @@ class DVR():
         return self.phi(k, x) * self.phi(l, x) * self.morse(x)
 
     def potential_matrix(self, k, l):
-        return t.integrate_old(lambda x: self.potential_matrix_fn(k, l, x), self.a,
-                           self.b, self.N)
-        # return it.quad(lambda x: self.potential_matrix_fn(k, l, x), self.a,
-        #                self.b)[0]
+        return t.integrate_old(lambda x: self.potential_matrix_fn(k, l, x),
+                               self.a, self.b, self.N)
+
+        # return it.quad(lambda x: self.potential_matrix_fn(k, l, x), self.a,  # self.b)[0]
 
     def kinetic_matrix(self, k, l):
         if k != l:

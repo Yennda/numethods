@@ -3,7 +3,6 @@ import tools as t
 import time
 from script import DVR
 import numpy as np
-dvr = DVR(a=-3, b=5, N=1000)
 
 
 def compute(n):
@@ -55,23 +54,14 @@ def err_interval(n, a=0, b=0):
     return [d / (b - a) for d in diff]
 
 
+dvr = DVR(a=-3, b=5, N=500)
+
 dt = time.time()
 
-# l = []
-# for i in range(1, 10):
-#     b = i / 10
-#     print(b)
-#     print('T {}'.format(time.time() - dt))
-#     l.append(err_interval(20, b=b))
-#
-# print(l)
-
-dvr.N = 500
 rt = time.time()
-H = dvr.hamilton_matrix(50)
 
-# rt = time.time()
 # print(sorted(t.eigenLU(H, 500), reverse=True))
+# print(sorted(t.eigenJacobi(H, 500), reverse=True))
 # print(time.time() - rt)
 #
 # # rt = time.time()
@@ -80,19 +70,25 @@ H = dvr.hamilton_matrix(50)
 #
 # rt = time.time()
 # print(np.linalg.eig(H)[0])
+
 # print(time.time() - rt)
 
 lis = []
 times = []
-for i in [50+i*5 for i in range(8)]:
-    lis.append(compute_simple(i))
-    print('{}: {:.3f} s'.format(i, time.time() - rt))
-    times.append(time.time() - rt)
-    rt = time.time()
+for i in [60 + i for i in range(0, 21)]:
+    # lis.append(compute_simple(i))
+    H = dvr.hamilton_matrix(i)
+    sorted(np.linalg.eig(H)[0][:3])
+    lis.append(sorted(np.linalg.eig(H)[0][:3]))
 
-print([lis[i][0] for i in range(len(lis))])
-print([lis[i][1] for i in range(len(lis))])
-print([lis[i][2] for i in range(len(lis))])
-print(times)
+
+print('value={}'.format([[lis[i][0] for i in range(len(lis))],
+                            [lis[i][1] for i in range(len(lis))],
+                            [lis[i][2] for i in range(len(lis))]]))
+# print([lis[i][0] for i in range(len(lis))])
+# print([lis[i][1] for i in range(len(lis))])
+# print([lis[i][2] for i in range(len(lis))])
+print('times={}'.format(times))
+
 
 print('\nTotal time: {:.3f} s'.format(time.time() - dt))
