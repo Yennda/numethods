@@ -95,7 +95,7 @@ def minus(a, b):
 
 def is_small(A):
     for a in A:
-        if m.fabs(a) > 1e-10:
+        if m.fabs(a) > 1e-19:
             return False
     else:
         return True
@@ -145,11 +145,12 @@ def trans(A):
 def eigenLU(A, n):
     for i in range(n):
         lA = A[-1][-1]
-        L, U = lu(lA)
+        L, U = lu(A)
         A = dot(U, L)
 
-        if m.fabs(A[-1][-1] - lA) < 1e-10:
-            return [A[i][i] for i in range(len(A))]
+        # if m.fabs(A[-1][-1] - lA) < 1e-19:
+        #     print('sooner {}'.format(i))
+        #     return [A[i][i] for i in range(len(A))]
     return [A[i][i] for i in range(len(A))]
 
 
@@ -167,9 +168,9 @@ def eigenJacobi(A, n):
         S = S_matrix(d, p, q, a)
         A = dot(S[1], dot(lA, S[0]))
 
-        if is_small([A[i][i] - lA[i][i] for i in range(len(A))]):
-            print(i)
-            return [A[i][i] for i in range(len(A))]
+        # if is_small([A[i][i] - lA[i][i] for i in range(len(A))]):
+        #     print('sooner {}'.format(i))
+        #     return [A[i][i] for i in range(len(A))]
     # print(sorted(B, reverse=True))
 
     return [A[i][i] for i in range(len(A))]

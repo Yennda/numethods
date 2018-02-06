@@ -59,32 +59,34 @@ dvr = DVR(a=-3, b=5, N=500)
 dt = time.time()
 rt = time.time()
 
-# print(sorted(t.eigenLU(H, 500), reverse=True))
-# print(sorted(t.eigenJacobi(H, 500), reverse=True))
-# print(time.time() - rt)
-#
-# # rt = time.time()
-# # print(sorted(t.eigenJacobi(H, 500), reverse=True))
-# # print(time.time() - rt)
-#
-# rt = time.time()
-# print(np.linalg.eig(H)[0])
-
-# print(time.time() - rt)
 
 lis = []
 times = []
-for i in range(50, 80):
+for i in [50]:
     # lis.append(compute_simple(i))
 
     H = dvr.hamilton_matrix(i)
-    # t.print_mat(H)
-    ev = sorted(t.eigenLU(H))
-    lis.append(ev[:3])
 
+    print('lu')
+    tt = time.time()
+    ev = sorted(t.eigenLU(H, 500))
+    print(ev[:3])
+    print('{:.3f}'.format(time.time()-tt))
+
+    lis.append(ev[:3])
     times.append(time.time() - rt)
     print('{}: {}'.format(i, time.time() - rt))
-    print(ev[:3])
+
+
+    print('numpy')
+    tt = time.time()
+    print(sorted(np.linalg.eig(H)[0])[:3])
+    print('{:.3f}'.format(time.time()-tt))
+
+    print('jacobi')
+    tt = time.time()
+    print(sorted(t.eigenJacobi(H, 500))[:3])
+    print('{:.3f}'.format(time.time()-tt))
 
 
 print('value={}'.format([[lis[i][0] for i in range(len(lis))],
