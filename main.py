@@ -74,17 +74,17 @@ rt = time.time()
 
 lis = []
 times = []
-for i in [60, 70, 80]:
+for i in range(50, 80):
     # lis.append(compute_simple(i))
 
     H = dvr.hamilton_matrix(i)
     # t.print_mat(H)
-    ev = sorted(np.linalg.eig(H)[0], reverse=True)
+    ev = sorted(t.eigenLU(H))
     lis.append(ev[:3])
 
     times.append(time.time() - rt)
     print('{}: {}'.format(i, time.time() - rt))
-    print(ev)
+    print(ev[:3])
 
 
 print('value={}'.format([[lis[i][0] for i in range(len(lis))],

@@ -144,11 +144,11 @@ def trans(A):
 
 def eigenLU(A, n):
     for i in range(n):
-        lA = A
+        lA = A[-1][-1]
         L, U = lu(lA)
         A = dot(U, L)
 
-        if m.fabs(A[3][3] - lA[3][3]) < 1e-10:
+        if m.fabs(A[-1][-1] - lA) < 1e-10:
             return [A[i][i] for i in range(len(A))]
     return [A[i][i] for i in range(len(A))]
 
