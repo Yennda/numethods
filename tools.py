@@ -171,7 +171,6 @@ def eigenJacobi(A, n):
         # if is_small([A[i][i] - lA[i][i] for i in range(len(A))]):
         #     print('sooner {}'.format(i))
         #     return [A[i][i] for i in range(len(A))]
-    # print(sorted(B, reverse=True))
 
     return [A[i][i] for i in range(len(A))]
 

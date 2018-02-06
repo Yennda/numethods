@@ -27,30 +27,30 @@ def compute(n):
 
 def compute_simple(n):
     H = dvr.hamilton_matrix(n)
-    return t.eigenLU(H, 500)[0:3]
+    return sorted(t.eigenLU(H, 1000))[0:3]
 
 
 def err_integral(n, dN):
-    eigen = t.eigenLU(dvr.hamilton_matrix(n), 500)[0:3]
+    eigen = compute_simple(n)
     dvr.N += dN
 
-    diff = t.minus(eigen, t.eigenLU(dvr.hamilton_matrix(n), 500)[0:3])
+    diff = t.minus(eigen, compute_simple(n)[0:3])
     return [d / dN for d in diff]
 
 
 def err_dimension(n, dn):
-    eigen = t.eigenLU(dvr.hamilton_matrix(n), 500)[0:3]
+    eigen = compute_simple(n)
 
-    diff = t.minus(eigen, t.eigenLU(dvr.hamilton_matrix(n + dn), 500)[0:3])
+    diff = t.minus(eigen, compute_simple(n)[0:3])
     return [d / dn for d in diff]
 
 
 def err_interval(n, a=0, b=0):
-    eigen = t.eigenLU(dvr.hamilton_matrix(n), 500)[0:3]
+    eigen = compute_simple(n)
     dvr.a += a
     dvr.b += b
 
-    diff = t.minus(eigen, t.eigenLU(dvr.hamilton_matrix(n), 500)[0:3])
+    diff = t.minus(eigen, compute_simple(n)[0:3])
     return [d / (b - a) for d in diff]
 
 
@@ -62,31 +62,20 @@ rt = time.time()
 
 lis = []
 times = []
-for i in [50]:
-    # lis.append(compute_simple(i))
 
-    H = dvr.hamilton_matrix(i)
+for i in range(70, 75):
+    rt = time.time()
 
-    print('lu')
-    tt = time.time()
-    ev = sorted(t.eigenLU(H, 500))
-    print(ev[:3])
-    print('{:.3f}'.format(time.time()-tt))
+    lis.append(compute_simple(i))
 
-    lis.append(ev[:3])
     times.append(time.time() - rt)
     print('{}: {}'.format(i, time.time() - rt))
 
 
-    print('numpy')
-    tt = time.time()
-    print(sorted(np.linalg.eig(H)[0])[:3])
-    print('{:.3f}'.format(time.time()-tt))
-
-    print('jacobi')
-    tt = time.time()
-    print(sorted(t.eigenJacobi(H, 500))[:3])
-    print('{:.3f}'.format(time.time()-tt))
+    # print('numpy')
+    # tt = time.time()
+    # print(sorted(np.linalg.eig(H)[0])[:3])
+    # print('{:.3f}'.format(time.time()-tt))
 
 
 print('value={}'.format([[lis[i][0] for i in range(len(lis))],
