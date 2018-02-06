@@ -1,7 +1,5 @@
 import math as m
 import tools as t
-import time
-import scipy.integrate as it
 
 # a = -3
 # b = 5

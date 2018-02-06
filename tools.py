@@ -1,5 +1,5 @@
 import math as m
-import numpy as np
+# import numpy as np
 import copy
 
 
@@ -28,10 +28,10 @@ def integrate_old(f, a, b, n):
     return h * sum([f(a + i * h) for i in range(1, n)]) + h * (f(a) + f(b)) / 2
 
 
-def is_strong_reg(H):
-    for i in range(1, len(H)):
-        nH = np.matrix(H)
-    return not m.isclose(np.linalg.det(nH[:i, :i]), 0, rel_tol=0.001)
+# def is_strong_reg(H):
+#     for i in range(1, len(H)):
+#         nH = np.matrix(H)
+#     return not m.isclose(np.linalg.det(nH[:i, :i]), 0, rel_tol=0.001)
 
 
 def one(n):

@@ -2,7 +2,6 @@ import math as m
 import tools as t
 import time
 from script import DVR
-import numpy as np
 
 
 def compute(n):
@@ -63,7 +62,7 @@ rt = time.time()
 lis = []
 times = []
 
-for i in range(70, 75):
+for i in range(80, 85):
     rt = time.time()
 
     lis.append(compute_simple(i))
