@@ -34,10 +34,13 @@ class DVR():
         return self.phi(k, x) * self.phi(l, x) * self.morse(x)
 
     def potential_matrix(self, k, l):
-        return t.integrate_old(lambda x: self.potential_matrix_fn(k, l, x),
-                               self.a, self.b, self.N)
+        # return t.integrate_old(lambda x: self.potential_matrix_fn(k, l, x),
+        #                        self.a, self.b, self.N)
 
-        # return it.quad(lambda x: self.potential_matrix_fn(k, l, x), self.a,  # self.b)[0]
+        return it.quad(
+            lambda x: self.potential_matrix_fn(k, l, x),
+            self.a,
+            self.b)[0]
 
     def kinetic_matrix(self, k, l):
         if k != l:
@@ -45,11 +48,19 @@ class DVR():
         return (1 / GAMMA * (k * m.pi / (self.b - self.a))) ** 2
 
     def hamilton_matrix(self, r):
-        matrix = []
-        for i in range(1, r):
-            row = []
-            for j in range(1, r):
-                row.append(
-                    self.potential_matrix(i, j) + self.kinetic_matrix(i, j))
-            matrix.append(row)
+        matrix = t.zero(r - 1)
+        for i in range(r-1):
+            for j in range(i+1):
+                matrix[i][j] = self.potential_matrix(i + 1, j + 1) + \
+                               self.kinetic_matrix(i + 1, j + 1)
+                matrix[j][i] = matrix[i][j]
         return matrix
+
+        # matrix=[]
+        #  for i in range(1, r):
+        #     row = []
+        #     for j in range(1, r):
+        #         row.append(
+        #             self.potential_matrix(i, j) + self.kinetic_matrix(i, j))
+        #     matrix.append(row)
+        #  return matrix

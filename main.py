@@ -57,7 +57,6 @@ def err_interval(n, a=0, b=0):
 dvr = DVR(a=-3, b=5, N=500)
 
 dt = time.time()
-
 rt = time.time()
 
 # print(sorted(t.eigenLU(H, 500), reverse=True))
@@ -75,20 +74,23 @@ rt = time.time()
 
 lis = []
 times = []
-for i in [60 + i for i in range(0, 21)]:
+for i in [60, 70, 80]:
     # lis.append(compute_simple(i))
+
     H = dvr.hamilton_matrix(i)
-    sorted(np.linalg.eig(H)[0][:3])
-    lis.append(sorted(np.linalg.eig(H)[0][:3]))
+    # t.print_mat(H)
+    ev = sorted(np.linalg.eig(H)[0], reverse=True)
+    lis.append(ev[:3])
+
+    times.append(time.time() - rt)
+    print('{}: {}'.format(i, time.time() - rt))
+    print(ev)
 
 
 print('value={}'.format([[lis[i][0] for i in range(len(lis))],
                             [lis[i][1] for i in range(len(lis))],
                             [lis[i][2] for i in range(len(lis))]]))
-# print([lis[i][0] for i in range(len(lis))])
-# print([lis[i][1] for i in range(len(lis))])
-# print([lis[i][2] for i in range(len(lis))])
-print('times={}'.format(times))
 
+print('times={}'.format(times))
 
 print('\nTotal time: {:.3f} s'.format(time.time() - dt))
