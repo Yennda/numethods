@@ -16,8 +16,6 @@ def compute(n):
     else:
         t.print_mat(H)
 
-    # print('H is strongly regular: {}'.format(t.is_strong_reg(H)))
-
     res = t.eigenLU(H, 500)
     print('Eigenvalues:\n {}'.format(res))
 
@@ -53,15 +51,17 @@ def err_interval(n, a=0, b=0):
     return [d / (b - a) for d in diff]
 
 
-dvr = DVR(a=-3, b=5, N=500)
-
 dt = time.time()
 rt = time.time()
+
+
+dvr = DVR(a=-3, b=5, N=500)
 
 
 lis = []
 times = []
 
+# cycle for different dimensions of H matrix
 for i in range(80, 85):
     rt = time.time()
 
@@ -77,9 +77,11 @@ for i in range(80, 85):
     # print('{:.3f}'.format(time.time()-tt))
 
 
-print('value={}'.format([[lis[i][0] for i in range(len(lis))],
-                            [lis[i][1] for i in range(len(lis))],
-                            [lis[i][2] for i in range(len(lis))]]))
+print('value={}'.format([
+    [lis[i][0] for i in range(len(lis))],
+    [lis[i][1] for i in range(len(lis))],
+    [lis[i][2] for i in range(len(lis))]
+]))
 
 print('times={}'.format(times))
 
