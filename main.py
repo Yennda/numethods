@@ -30,7 +30,7 @@ def compute_simple(n):
 def err_integral(dim):
     lis = []
     times = []
-    for i in range(0, 1000, 100):
+    for i in range(0, 1500, 100):
         dvr.N += i
 
         rt = time.time()
@@ -70,7 +70,7 @@ def err_dimension():
 def err_interval(dim):
     lis = []
     times = []
-    for i in range(10):
+    for i in range(-8, 10):
         dvr.a -= i / 10
         dvr.b += i / 10
 
@@ -96,7 +96,7 @@ dvr = DVR(a=-3, b=5, N=500)
 dim = 30
 
 # err_dimension()
-err_interval(dim)
-# err_integral(dim)
+# err_interval(dim)
+err_integral(dim)
 
 print('\nTotal time: {:.3f} s'.format(time.time() - dt))
