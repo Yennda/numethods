@@ -27,62 +27,76 @@ def compute_simple(n):
     return sorted(t.eigenLU(H, 1000))[0:3]
 
 
-def err_integral(n, dN):
-    eigen = compute_simple(n)
-    dvr.N += dN
+def err_integral(dim):
+    lis = []
+    times = []
+    for i in range(0, 1000, 100):
+        dvr.N += i
 
-    diff = t.minus(eigen, compute_simple(n)[0:3])
-    return [d / dN for d in diff]
+        rt = time.time()
+        lis.append(compute_simple(dim))
+        times.append(time.time() - rt)
+
+        print('Loop {}: {}'.format(i, time.time() - rt))
+
+    print(
+        'value_ig[0].extend({})\nvalue_ig[1].extend({})\nvalue_ig[2].extend({})\n'.format(
+            [lis[i][0] for i in range(len(lis))],
+            [lis[i][1] for i in range(len(lis))],
+            [lis[i][2] for i in range(len(lis))]))
+
+    print('times_ig.extend({})'.format(times))
 
 
-def err_dimension(n, dn):
-    eigen = compute_simple(n)
+def err_dimension():
+    lis = []
+    times = []
+    for i in range(60, 65):
+        rt = time.time()
+        lis.append(compute_simple(i))
+        times.append(time.time() - rt)
 
-    diff = t.minus(eigen, compute_simple(n)[0:3])
-    return [d / dn for d in diff]
+        print('Loop {}: {}'.format(i, time.time() - rt))
+
+    print(
+        'value[0].extend({})\nvalue[1].extend({})\nvalue[2].extend({})\n'.format(
+            [lis[i][0] for i in range(len(lis))],
+            [lis[i][1] for i in range(len(lis))],
+            [lis[i][2] for i in range(len(lis))]))
+
+    print('times.extend({})'.format(times))
 
 
-def err_interval(n, a=0, b=0):
-    eigen = compute_simple(n)
-    dvr.a += a
-    dvr.b += b
+def err_interval(dim):
+    lis = []
+    times = []
+    for i in range(10):
+        dvr.a -= i / 10
+        dvr.b += i / 10
 
-    diff = t.minus(eigen, compute_simple(n)[0:3])
-    return [d / (b - a) for d in diff]
+        rt = time.time()
+        lis.append(compute_simple(dim))
+        times.append(time.time() - rt)
+
+        print('Loop {}: {}'.format(i, time.time() - rt))
+
+    print(
+        'value_iv[0].extend({})\nvalue_iv[1].extend({})\nvalue_iv[2].extend({})\n'.format(
+            [lis[i][0] for i in range(len(lis))],
+            [lis[i][1] for i in range(len(lis))],
+            [lis[i][2] for i in range(len(lis))]))
+
+    print('times_iv.extend({})'.format(times))
 
 
 dt = time.time()
 rt = time.time()
 
-
 dvr = DVR(a=-3, b=5, N=500)
+dim = 30
 
-
-lis = []
-times = []
-
-# cycle for different dimensions of H matrix
-for i in range(80, 85):
-    rt = time.time()
-
-    lis.append(compute_simple(i))
-
-    times.append(time.time() - rt)
-    print('{}: {}'.format(i, time.time() - rt))
-
-
-    # print('numpy')
-    # tt = time.time()
-    # print(sorted(np.linalg.eig(H)[0])[:3])
-    # print('{:.3f}'.format(time.time()-tt))
-
-
-print('value={}'.format([
-    [lis[i][0] for i in range(len(lis))],
-    [lis[i][1] for i in range(len(lis))],
-    [lis[i][2] for i in range(len(lis))]
-]))
-
-print('times={}'.format(times))
+# err_dimension()
+err_interval(dim)
+# err_integral(dim)
 
 print('\nTotal time: {:.3f} s'.format(time.time() - dt))
