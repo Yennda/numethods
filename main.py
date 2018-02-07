@@ -24,13 +24,13 @@ def compute(n):
 
 def compute_simple(n):
     H = dvr.hamilton_matrix(n)
-    return sorted(t.eigenLU(H, 1000))[0:3]
+    return sorted(t.eigenLU(H, 1500))[0:3]
 
 
 def err_integral(dim):
     lis = []
     times = []
-    for i in range(0, 1500, 100):
+    for i in range(0, 1000, 100):
         dvr.N += i
 
         rt = time.time()
@@ -51,7 +51,7 @@ def err_integral(dim):
 def err_dimension():
     lis = []
     times = []
-    for i in range(60, 65):
+    for i in range(50, 60):
         rt = time.time()
         lis.append(compute_simple(i))
         times.append(time.time() - rt)
@@ -93,7 +93,7 @@ dt = time.time()
 rt = time.time()
 
 dvr = DVR(a=-3, b=5, N=500)
-dim = 30
+dim = 70
 
 # err_dimension()
 # err_interval(dim)
