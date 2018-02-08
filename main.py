@@ -51,7 +51,7 @@ def err_integral(dim):
 def err_dimension():
     lis = []
     times = []
-    for i in range(50, 60):
+    for i in range(30, 50):
         rt = time.time()
         lis.append(compute_simple(i))
         times.append(time.time() - rt)
@@ -70,7 +70,7 @@ def err_dimension():
 def err_interval(dim):
     lis = []
     times = []
-    for i in range(-8, 10):
+    for i in range(0, 10):
         dvr.a -= i / 10
         dvr.b += i / 10
 
@@ -92,7 +92,7 @@ def err_interval(dim):
 dt = time.time()
 rt = time.time()
 
-dvr = DVR(a=-3, b=5, N=500)
+dvr = DVR(a=-3, b=5, N=100)
 dim = 70
 
 # err_dimension()
